@@ -1,0 +1,10 @@
+<#
+Can be used with
+- Get-User
+- Get-Mailbox
+- Get-Get-DistributionGroup
+
+Different Filter's
+- Get-DistributionGroup -Filter * | Select Name, SimpleDisplayName | FT
+- Get-Mailbox -Filter {Name -like "Accounts*"} | Select Name, SimpleDisplayName | FT
+#>
