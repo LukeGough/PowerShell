@@ -1,0 +1,8 @@
+# Prompt for Oiffce365 Administraitor credentials
+$exchcred = Get-Credential -Message "Enter Office365 Admin Credentials"
+
+# Create a new PSSession using the credenticals provided
+$s = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.outlook.com/powershell -Credential $exchcred -Authentication Basic -AllowRedirection;
+
+# Import PSSession
+import-pssession $s;
