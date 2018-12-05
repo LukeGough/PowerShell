@@ -1,0 +1,12 @@
+<#
+Variations
+- Get-MailboxFolderPermissions
+- Add-MailboxFolderPermissions
+- Set-MailboxFolderPermissions
+
+Must use :\Calendar switch after the username/email to edit Calendar permissions
+
+Examples
+Granting John.Smith Editor access to Luke Gough's calendar
+- add-mailboxfolderpermission -identity "luke.gough:\calendar" -user  "John.Smith" -accessrights Editor
+#>
