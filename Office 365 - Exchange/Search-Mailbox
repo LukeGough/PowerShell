@@ -1,0 +1,8 @@
+<#
+
+Searches the mailbox in the -identity field for the query in the -SearchQuery field
+Sends a report to the mailbox in the -TargetMailbox field and to the folder specified in the -TargetFolder
+
+#>
+
+Search-Mailbox -Identity "UserMailbox" -SearchQuery 'Subject: SubjectHere' -TargetMailbox "AdminUser" -TargetFolder "inbox"-LogOnly -LogLevel Full
