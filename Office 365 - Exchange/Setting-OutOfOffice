@@ -1,4 +1,4 @@
 <#
 Example
-Set-MailboxAutoReplyConfiguration "Luke.Gough" -AutoReplyState enabled -ExternalAudience all -InternalMessage "Message to internal senders" -ExternalMessage "Message to external senders"
+Set-MailboxAutoReplyConfiguration "John.Smith" -AutoReplyState enabled -ExternalAudience all -InternalMessage "Message to internal senders" -ExternalMessage "Message to external senders"
 #>
