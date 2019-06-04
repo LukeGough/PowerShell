@@ -1,17 +1,17 @@
 <####################
-# Script will get all AD Users in the specified OU and export to a CSV file
-# Columns that will be in the CSV file
-#   Name
-#   SamAccountName
-#   Description
-#   LastLogonDate
-#   PasswordLastSet
-#   Enabled (True or False)
-#   MemberOf (Column name will be MemberOf, group seperated by a comma ","
-#   DistinguishedName
-#
-# Author: Luke Gough
-# Last Edited: 04/06/2019
+Script will get all AD Users in the specified OU and export to a CSV file
+Columns that will be in the CSV file
+ Name
+ SamAccountName
+ Description
+ LastLogonDate
+ PasswordLastSet
+ Enabled (True or False)
+ MemberOf (Column name will be MemberOf, group seperated by a comma ","
+ DistinguishedName
+
+Author: Luke Gough
+Last Edited: 04/06/2019
 ####################>
 
 # CSV Filepath
