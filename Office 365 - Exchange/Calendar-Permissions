@@ -1,12 +1,19 @@
-<#
+<####################
 Variations
-- Get-MailboxFolderPermissions
-- Add-MailboxFolderPermissions
-- Set-MailboxFolderPermissions
+ Get-MailboxFolderPermissions
+ Add-MailboxFolderPermissions
+ Set-MailboxFolderPermissions
+  Set command is used to update existing permissions
 
 Must use :\Calendar switch after the username/email to edit Calendar permissions
 
 Examples
-Granting John.Smith Editor access to Luke Gough's calendar
-- add-mailboxfolderpermission -identity "luke.gough:\calendar" -user  "John.Smith" -accessrights Editor
-#>
+Viewing John Smith's calendar permissions
+ Get-MailboxFolderPermission -Identity "john.smith:\calendar"
+
+Granting John Smith Editor access to Jane Doe's calendar
+ Add-MailboxFolderPermission -Identity "jane.doe:\calendar" -User  "john.smith" -AccessRights Editor
+
+Updating John Smith's permissions to Jane Doe's calendar
+ Set-MailboxFolderPermission -Identity "jane.doe:\calendar" -User  "john.smith" -AccessRights Editor
+####################>
