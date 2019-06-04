@@ -1,0 +1,44 @@
+<####################
+# Script will get all AD Users in the specified OU and export to a CSV file
+# Columns that will be in the CSV file
+#   Name
+#   SamAccountName
+#   Description
+#   LastLogonDate
+#   PasswordLastSet
+#   Enabled (True or False)
+#   MemberOf (Column name will be MemberOf, group seperated by a comma ","
+#   DistinguishedName
+#
+# Author: Luke Gough
+# Last Edited: 04/06/2019
+####################>
+
+# CSV Filepath
+$csvFilepath = "C:\Temp\ADUser_&_Groups.csv"
+
+# Searchbases
+$users = @()
+
+# Fill in the OU
+# Eample $OU = "OU=My,OU=OU,DC=HERE,DC=com"
+$OU = "distinguishedName of OU goes here"
+
+$SearchBase = get-aduser -filter * -Properties * -SearchBase $OU
+$users += $SearchBase
+
+# Empty array which results will be put into
+$resultsarray = @()
+
+# forEach loop
+foreach ($user in $users) {
+
+    $usergroups = new-object PSObject
+
+    $usergroups = Get-ADUser $user -Properties * | select name,SamAccountName,description,LastLogonDate,PasswordLastSet,enabled, @{n=’MemberOf’; e= { ( $_.memberof | % { (Get-ADObject $_).Name }) -join “,” }},distinguishedName
+
+    $resultsarray += $usergroups
+}
+
+# Make sure the export path exists
+$resultsarray | Export-csv -path $csvFilepath -notypeinformation
