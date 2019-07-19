@@ -6,7 +6,7 @@ Download and install SharePoint Online Management Shell (https://www.microsoft.c
 [void][System.Reflection.Assembly]::LoadWithPartialName('Microsoft.VisualBasic')
 
 # Prompt for O365 Organization Name Input
-$orgName = [Microsoft.VisualBasic.Interaction]::InputBox("Enter your Org Name")
+$orgName = [Microsoft.VisualBasic.Interaction]::InputBox("Enter your O365 Organization's Name")
 
 # Import SharePoint Online(SPO) Module
 $SPOModulePath = 'C:\Program Files\SharePoint Online Management Shell\'
