@@ -1,0 +1,19 @@
+<###
+Download and install SharePoint Online Management Shell (https://www.microsoft.com/en-au/download/details.aspx?id=35588)
+###>
+
+# Import used for InputBox
+[void][System.Reflection.Assembly]::LoadWithPartialName('Microsoft.VisualBasic')
+
+# Prompt for O365 Organization Name Input
+$orgName = [Microsoft.VisualBasic.Interaction]::InputBox("Enter your Org Name")
+
+# Import SharePoint Online(SPO) Module
+$SPOModulePath = 'C:\Program Files\SharePoint Online Management Shell\'
+$Env:PSModulePath = '{0};{1}' -f $Env:PSModulePath, $SPOModulePath
+Import-Module Microsoft.Online.SharePoint.PowerShell -DisableNameChecking
+
+# Connect to SharePoint Online(SPO) admin portal
+Connect-SPOService -Url https://$orgName-admin.sharepoint.com
+
+$Env:PSModulePath = '{0};{1}' -f $Env:PSModulePath
