@@ -1,6 +1,9 @@
-<###
+<####################
 Download and install SharePoint Online Management Shell (https://www.microsoft.com/en-au/download/details.aspx?id=35588)
-###>
+
+Author: Luke Gough
+Last Edited: 19/07/2019
+####################>
 
 # Import used for InputBox
 [void][System.Reflection.Assembly]::LoadWithPartialName('Microsoft.VisualBasic')
