@@ -2,40 +2,72 @@
 Author: Luke Gough
 Last Edited: 11/01/2021
 ###>
-# Prompt for MFA/Office 365 authentication and credentials
-    # If using MFA you need to install “Exchange Online PowerShell Module” (EXO). Find more information in the below link
+# If using MFA you need to install “Exchange Online PowerShell Module” (EXO). Find more information in the below link
     # https://o365reports.com/2019/04/17/connect-exchange-online-using-mfa/
 
-    # If using Powershell ISE you can use the below commented out line to import the MFA Enabled Exchange Online Powershell module into ISE
-        # Make sure the installation location is correct if you are going to do this
+# If using Powershell or Powershell ISE you can use the below commented out line to import the MFA Enabled Exchange Online Powershell module into ISE
+    # Make sure the installation location is correct if you are going to do this
     <#
+
     $MFAExchangeModule = ((Get-ChildItem -Path $($env:LOCALAPPDATA+"\Apps\2.0\") -Filter CreateExoPSSession.ps1 -Recurse ).FullName | Select-Object -Last 1)
-    . "$MFAExchangeModule" // command is ran on new line not on the same line are the above
+    . "$MFAExchangeModule" // command is ran on new line not on the same line as the above
+        
     #>
 
-$msgBox = [System.Windows.MessageBox]::Show('Do you require MFA Authentication?','MFA Authencation','YesNo', 'Information')
+try {
+    # Create MFA module so script can be used in Powershell/Powershell ISE
+    $MFAExchangeModule = ((Get-ChildItem -Path $($env:LOCALAPPDATA+"\Apps\2.0\") -Filter CreateExoPSSession.ps1 -Recurse ).FullName | Select-Object -Last 1)
+    . "$MFAExchangeModule"
+}
+catch {
+    Write-Host "Unable create MFA Module" -ForegroundColor Red
+}
 
-switch ($msgBox) {
-    'Yes' {
-        Connect-EXOPSSession
-    }
-    'No' {
-        $msgBox = [System.Windows.MessageBox]::Show('Do you require Office 365 Authentication?','Office 365 Authencation','YesNo', 'Information')
-        switch ($msgBox) {
-            'Yes' {
-                # Prompt for Oiffce365 Administraitor credentials
-                $exchcred = Get-Credential -Message "Enter Office365 Admin Credentials"
+# Prompt for MFA/Office 365 authentication and credentials
+try{
+    # Add PresentationFramework to allow MessageBox to be created
+    Add-Type -AssemblyName PresentationFramework
 
-                # Create a new PSSession using the credenticals provided
-                $s = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.outlook.com/powershell -Credential $exchcred -Authentication Basic -AllowRedirection;
+    # Create a MessageBox to select MFA or non MFA sign-in
+    $msgBox = [System.Windows.MessageBox]::Show('Do you require MFA Authentication?','MFA Authencation','YesNo', 'Information')
 
-                # Import PSSession
-                Import-PSSession $s;
+    switch ($msgBox) {
+        # MFA
+        'Yes' {
+            Connect-EXOPSSession
+        }
+        'No' {
+            # Non MFA
+            $msgBox = [System.Windows.MessageBox]::Show('Do you require Office 365 Authentication?','Office 365 Authencation','YesNo', 'Information')
+            switch ($msgBox) {
+                'Yes' {
+                    try {
+                        # Prompt for Oiffce365 Administraitor credentials
+                        $exchcred = Get-Credential -Message "Enter Office365 Admin Credentials"
+
+                        # Create a new PSSession using the credenticals provided
+                        $s = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://ps.outlook.com/powershell -Credential $exchcred -Authentication Basic -AllowRedirection;
+
+                        # Import PSSession
+                        Import-PSSession $s;
+                    }
+                    catch {
+                        Write-Host "Unable to sign-in to Office 365" -ForegroundColor Red
+                        Exit
+                    }
+                }
+                'No' {
+                    Exit
+                }
             }
-            'No' {}
         }
     }
 }
+catch {
+    Write-Host "Unable to sign-in to Office 365" -ForegroundColor Red
+    Exit
+}
+
 
 # Get current Date and Time
 $dateTime = Get-Date -format "MM-dd-yyyy_HH-mm"
@@ -44,12 +76,12 @@ $dateTime = Get-Date -format "MM-dd-yyyy_HH-mm"
 $path = "C:\temp"
 If(!(test-path $path)) {
     New-Item -ItemType Directory -Force -Path $path
-    $csvFilepath = "c:\temp\O365SizeReport_$dateTime.csv"
+    $csvFilepath = "$path\O365SizeReport_$dateTime.csv"
 } elseif (test-path $path) {
-    $csvFilepath = "c:\temp\O365SizeReport_$dateTime.csv"
+    $csvFilepath = "$path\O365SizeReport_$dateTime.csv"
 } else {
     Write-Host "$path does not exist and can't be created" -ForegroundColor Red
-    break
+    Exit
 }
 
 # Create empty arrays
@@ -61,13 +93,14 @@ $erroredMailboxes = @()
 $searchBase = Get-Mailbox -Resultsize Unlimited
 
 # Add searchBase to mailboxesArray
-$mailboxesArray += $searchBase
+#$mailboxesArray += $searchBase
+$mailboxesArray += Get-Mailbox -identity "Caleb Lindsay"
 
 # Foreach mailbox inside mailboxesArray get results 
 foreach ($mailbox in $mailboxesArray) {
     try {
         # Output currently mailbox being checked
-        Write-Host "Getting information for $mailbox.UserPrincipalName" -ForegroundColor Yellow
+        Write-Host "Getting information for $mailbox" -ForegroundColor Yellow
 
         # Create Empty Custom Object
         $finalResults = [pscustomobject] @{}
