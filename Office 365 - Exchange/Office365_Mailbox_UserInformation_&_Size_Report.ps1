@@ -93,8 +93,7 @@ $erroredMailboxes = @()
 $searchBase = Get-Mailbox -Resultsize Unlimited
 
 # Add searchBase to mailboxesArray
-#$mailboxesArray += $searchBase
-$mailboxesArray += Get-Mailbox -identity "Caleb Lindsay"
+$mailboxesArray += $searchBase
 
 # Foreach mailbox inside mailboxesArray get results 
 foreach ($mailbox in $mailboxesArray) {
