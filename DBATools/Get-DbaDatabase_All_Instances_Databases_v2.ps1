@@ -1,4 +1,9 @@
 ﻿<###
+Running the script
+    Supplying no switches will expot SQL user statements SQL files and a CSV which contains user permissions for each database instance.
+    Using switch -GetDbaUsers will export SQL files which contain SQL user statements each database instance.
+    Using switch -GetDbaUserPermissions will export a single CSV file which contains user permissions for each database instance.
+ 
 v2
     Added [Parameter(Mandatory=$false)] which will run both Get-DbaUsers and Get-DbaUserPermissions if no parameter/switch is provided during script call.
     Fxied error with Get-DbaUserPermissions()
